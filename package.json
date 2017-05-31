@@ -1,0 +1,20 @@
+{
+    "name": "syslog-server",
+    "version": "1.0.0",
+    "description": "NodeJS Syslog Server",
+    "main": "index.js",
+    "author": {
+        "name": "Luiz Guilherme Thess",
+        "email": "guithess@gmail.com"
+    },
+    "keywords": [
+        "syslog",
+        "syslog-server"
+    ],
+    "homepage": "https://github.com/guithess/syslog-server#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/guithess/syslog-server.git"
+    },
+    "license": "MIT"
+}
