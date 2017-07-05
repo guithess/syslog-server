@@ -28,7 +28,7 @@ class SyslogServer extends EventEmitter {
                 });
 
                 // Socket error handler
-                server.on("error", () => {
+                server.on("error", (err) => {
                     this.emit("error", err);
                 });
 
