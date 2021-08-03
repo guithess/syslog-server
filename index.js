@@ -7,7 +7,7 @@ class SyslogServer extends EventEmitter {
 
     constructor() {
         super();
-        this.server = null;
+        this.socket = null;
     }
 
     start(options = { port: 514, address: "0.0.0.0", exclusive: true }, cb) {
@@ -17,20 +17,20 @@ class SyslogServer extends EventEmitter {
                 if (cb) return cb(errorObj, this);
                 return reject(errorObj);
             } else {
-                this.server = dgram.createSocket("udp4");
+                this.socket = dgram.createSocket("udp4");
 
                 // Socket listening handler
-                this.server.on("listening", () => {
+                this.socket.on("listening", () => {
                     this.emit("start", this);
                 });
 
                 // Socket error handler
-                this.server.on("error", (err) => {
+                this.socket.on("error", (err) => {
                     this.emit("error", err);
                 });
 
                 // Socket message handler
-                this.server.on("message", (msg, remote) => {
+                this.socket.on("message", (msg, remote) => {
                     let message = {
 						date: new Date(),
                         host: remote.address,
@@ -41,11 +41,11 @@ class SyslogServer extends EventEmitter {
                 });
 
                 // Socket close handler
-                this.server.on("close", () => {
+                this.socket.on("close", () => {
                     this.emit("stop");
                 });
 
-                this.server.bind(options, (err) => {
+                this.socket.bind(options, (err) => {
                     if (err) {
                         let errorObj = createErrorObject(err, "NodeJS Syslog Server failed to start!");
                         if (cb) return cb(errorObj, this);
@@ -62,8 +62,8 @@ class SyslogServer extends EventEmitter {
     stop(cb) {
         return new Promise((resolve, reject) => {
             try {
-                this.server.close(() => {
-                    this.server = null;
+                this.socket.close(() => {
+                    this.socket = null;
                     if (cb) return cb(null, this);
                     return resolve(this);
                 });
@@ -76,7 +76,7 @@ class SyslogServer extends EventEmitter {
     }
 
     isRunning() {
-        return (this.server !== null);
+        return (this.socket !== null);
     }
 }
 
