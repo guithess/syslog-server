@@ -12,7 +12,7 @@ class SyslogServer extends EventEmitter {
 
     start(options = { port: 514, address: "0.0.0.0", exclusive: true }, cb) {
         return new Promise((resolve, reject) => {
-            if (this.server.listening === true) {
+            if (this.isRunning()) {
                 let errorObj = createErrorObject(null, "NodeJS Syslog Server is already running!");
                 if (cb) return cb(errorObj, this);
                 return reject(errorObj);
@@ -63,6 +63,7 @@ class SyslogServer extends EventEmitter {
         return new Promise((resolve, reject) => {
             try {
                 this.server.close(() => {
+                    this.server = null;
                     if (cb) return cb(null, this);
                     return resolve(this);
                 });
@@ -75,7 +76,7 @@ class SyslogServer extends EventEmitter {
     }
 
     isRunning() {
-        return (this.server && this.server.listening);
+        return (this.server !== null);
     }
 }
 
