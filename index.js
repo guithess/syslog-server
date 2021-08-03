@@ -75,7 +75,7 @@ class SyslogServer extends EventEmitter {
     }
 
     isRunning() {
-        return this.server.listening;
+        return (this.server && this.server.listening);
     }
 }
 
