@@ -14,7 +14,7 @@ class SyslogServer extends EventEmitter {
         return new Promise((resolve, reject) => {
             if (this.server.listening === true) {
                 let errorObj = createErrorObject(null, "NodeJS Syslog Server is already running!");
-                if (cb) return cb(errorObj);
+                if (cb) return cb(errorObj, this);
                 return reject(errorObj);
             } else {
                 this.server = dgram.createSocket("udp4");
@@ -48,11 +48,11 @@ class SyslogServer extends EventEmitter {
                 this.server.bind(options, (err) => {
                     if (err) {
                         let errorObj = createErrorObject(err, "NodeJS Syslog Server failed to start!");
-                        if (cb) return cb(errorObj);
+                        if (cb) return cb(errorObj, this);
                         return reject(errorObj);
                     } else {
-                        if(cb) return cb();
-                        return resolve();
+                        if(cb) return cb(null, this);
+                        return resolve(this);
                     }
                 });
             }
@@ -63,12 +63,12 @@ class SyslogServer extends EventEmitter {
         return new Promise((resolve, reject) => {
             try {
                 this.server.close(() => {
-                    if (cb) return cb();
-                    return resolve();
+                    if (cb) return cb(null, this);
+                    return resolve(this);
                 });
             } catch (err) {
                 let errorObj = createErrorObject(err, "NodeJS Syslog Server is not running!");
-                if (cb) return cb(errorObj);
+                if (cb) return cb(errorObj, this);
                 return reject(errorObj);
             }
         });
